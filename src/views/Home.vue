@@ -1,7 +1,5 @@
 <template>
-
-  
-  <div id="main-container">
+ <div id="main-container">
     <h1>WordPress plugin selector</h1>
     <p>Don't spend your money on a membership/LMS plugin that might be incompatible with your current stack. Ask our experts first and find the right plugin!</p>
     <div class="selector-container">
@@ -35,6 +33,8 @@ import { Machine } from 'xstate';
 import { useMachine } from '@xstate/vue';
 
 
+//Chakra didnt work, VueFormulate not supported either
+//VueJs 3 is needed as a dependency of @xstate/vue
 //CONFIGURATION OF THE FORM, Use States for each question
 //the initial state has to be set to the first question, in our example "scope"
 const stepMachine =  Machine({
@@ -56,7 +56,9 @@ const stepMachine =  Machine({
             {answer : "Divi", picture: "src"},
             {answer : "X", picture: "src"},
             {answer : "Flatsome", picture: "src"},
-            {answer : "Other", picture: "src"}]
+            {answer : "Other", picture: "src"}
+            //{answer : "Other", picture: "src", type:"checkbox, toggle, etc"}
+            ]
             },
         on: { "Hello by Elementor": 'two', 
             Astra: 'two',
