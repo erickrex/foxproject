@@ -139,9 +139,13 @@ export default {
   name: 'Home',
   components: {},
   setup() {
-      
+    
+    //options doesnt need to be ref
     const option = ref('')
+
+    //this is not used anywhere
     const selectedOptions = reactive([])
+    
     let answersObj = { questions: [], answers: []}
 
     const {state, send} = useMachine(stepMachine);
