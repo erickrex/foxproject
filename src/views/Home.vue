@@ -1,5 +1,5 @@
 <template>
-  <div id="main-container">
+  <div>
     <h1>WordPress plugin selector</h1>
     <p>
       Don't spend your money on a membership/LMS plugin that might be
@@ -22,157 +22,46 @@
             validation="required"
           />
           {{ optionsAvailable.answer }}
-          <!-- <img alt="Plugin image" :src="getURL"> -->
+           
         </div>
-        <input type="button" value="Next" @click.prevent="handleButtonClick" />
         <input type="button" value="Back" @click.prevent="handleButtonBack" />
+        <input type="button" value="Next" @click.prevent="handleButtonClick" />
+        
       </form>
     </div>
-    <div></div>
+    
   </div>
 </template>
 
 
 <script>
-import { reactive, ref } from "vue";
-import { Machine } from "xstate";
-import { useMachine } from "@xstate/vue";
+import { ref } from "vue";
+import getQuestionnaire from "../composables/getQuestionnaire";
+import { useMachine } from '@xstate/vue';
 
 //Chakra didnt work, VueFormulate not supported either
 //CONFIGURATION OF THE FORM, Use States for each question
 //the initial state has to be set to the first question, in our example "scope"
-const stepMachine = Machine({
-  id: "step",
-  initial: "one",
-  context: {
-    results: [],
-    message: "",
-  },
-  states: {
-    one: {
-      meta: {
-        question: "Which theme are you currently using?",
-        optionsAvailable: [
-          { answer: "Hello by Elementor", picture: "src" },
-          { answer: "Astra", picture: "src" },
-          { answer: "OceanWP", picture: "src" },
-          { answer: "ThemeForest", picture: "src" },
-          { answer: "GeneratePress", picture: "src" },
-          { answer: "Genesis", picture: "src" },
-          { answer: "Divi", picture: "src" },
-          { answer: "X", picture: "src" },
-          { answer: "Flatsome", picture: "src" },
-          { answer: "Other", picture: "src" },
-          //{answer : "Other", picture: "src", type:"checkbox, toggle, etc"}
-        ],
-      },
-      on: {
-        "Hello by Elementor": "two",
-        Astra: "two",
-        OceanWP: "two",
-        ThemeForest: "two",
-        GeneratePress: "two",
-        Genesis: "two",
-        Divi: "two",
-        X: "two",
-        Flatsome: "two",
-        Other: "two",
-      },
-    },
-    two: {
-      meta: {
-        question: "Which page builder are you using, if any?",
-        optionsAvailable: [
-          { answer: "Elementor", picture: "src" },
-          { answer: "Divi Builder", picture: "src" },
-          { answer: "WPBakery", picture: "src" },
-          { answer: "None", picture: "src" },
-        ],
-      },
-      on: {
-        Elementor: "three",
-        "Divi Builder": "three",
-        WPBakery: "three",
-        None: "three",
-        PREV: "one",
-      },
-    },
-    three: {
-      meta: {
-        question: "Which cache plugin are you using, if any",
-        optionsAvailable: [
-          { answer: "RocketCache", picture: "src" },
-          { answer: "W3Cache", picture: "src" },
-          { answer: "SuperCache", picture: "src" },
-          { answer: "None", picture: "src" },
-        ],
-      },
-      on: {
-        RocketCache: "fourA",
-        W3Cache: "fourA",
-        SuperCache: "fourB",
-        None: "five",
-        PREV: "two",
-      },
-    },
-    fourA: {
-      meta: {
-        question: "What is the main area you wish to expand?",
-        optionsAvailable: [
-          { answer: "Courses", picture: "src" },
-          { answer: "Forums", picture: "src" },
-          { answer: "Sell content", picture: "src" },
-        ],
-      },
-      on: {
-        Courses: "five",
-        Forums: "five",
-        "Sell content": "five",
-        PREV: "three",
-      },
-    },
-    fourB: {
-      meta: {
-        question: "Are you a developer?",
-        optionsAvailable: [
-          { answer: "yes", picture: "src" },
-          { answer: "no", picture: "src" },
-        ],
-      },
-      on: { yes: "five", no: "five", PREV: "three" },
-    },
-    five: {
-      meta: {
-        question: "Do you require content dripping capabilities?",
-        optionsAvailable: [
-          { answer: "yes", picture: "src" },
-          { answer: "no", picture: "src" },
-          { answer: "I do not know", picture: "src" },
-        ],
-      },
-      on: { yes: "finish", no: "finish", PREV: "three" },
-    },
-    finish: {
-      type: "final",
-    },
-  },
-});
+
 
 export default {
   name: "Home",
   components: {},
   setup() {
+    console.log(1)
+    const { state, send } = useMachine(getQuestionnaire);
     //options doesnt need to be ref
     const option = ref("");
-
+    console.log(state);
+    console.log(3)
     //this is not used anywhere
-    const selectedOptions = reactive([]);
 
     let answersObj = { questions: [], answers: [] };
 
-    const { state, send } = useMachine(stepMachine);
-
-    return { state, send, option, selectedOptions, answersObj };
+    
+    console.log(3)
+    //console.log(state.one);
+    return { state, send, option, answersObj };
   },
   data() {
     return {
@@ -204,8 +93,7 @@ export default {
       //get selected option send selected option to next
       this.answersObj.questions.push(this.currentDecision.question);
       this.answersObj.answers.push(this.picked);
-      console.log(this.answersObj);
-
+      console.log(this);
       this.currentState = this.send(`${this.picked.answer}`);
     },
     handleButtonBack: function () {
@@ -226,7 +114,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 form {
   display: flex;
   flex-direction: row;

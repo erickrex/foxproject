@@ -1,16 +1,15 @@
 <template>
-    <Navbar />
-    <Home/>
+  <Navbar />
+  <router-view  />
+
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
-import Navbar from './components/Navbar.vue'
-import Home from './views/Home.vue'
+import Navbar from "./components/Navbar.vue";
 
 export default {
-  components: { Navbar, Home }  
-}
+  components: { Navbar }
+};
 </script>
 
 <style>
