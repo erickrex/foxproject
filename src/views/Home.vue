@@ -8,28 +8,33 @@
     </p>
     <div class="selector-container">
       <h2>{{ currentDecision.question }}</h2>
-      <form>
-        <div
-          class="option"
-          v-for="optionsAvailable in currentDecision.optionsAvailable"
-          :key="optionsAvailable"
-        >
-          <input
-            type="radio"
-            :value="optionsAvailable"
-            v-model="picked"
-            :name="currentDecision.question"
-            validation="required"
-          />
-          {{ optionsAvailable.answer }}
-           
+      <form class="selector">
+        <div>
+          <div
+            class="option"
+            v-for="optionsAvailable in currentDecision.optionsAvailable"
+            :key="optionsAvailable"
+          >
+            <input
+              type="radio"
+              :value="optionsAvailable"
+              v-model="picked"
+              :name="currentDecision.question"
+              validation="required"
+            />
+            {{ optionsAvailable.answer }}
+          </div>
         </div>
-        <input type="button" value="Back" @click.prevent="handleButtonBack" />
-        <input type="button" value="Next" @click.prevent="handleButtonClick" />
-        
+        <div class="submitQuestion">
+          <input class="submissionButton" type="button" value="Back" @click.prevent="handleBack" />
+          <input class="submissionButton"
+            type="button"
+            value="Next"
+            @click.prevent="handleForward"
+          />
+        </div>
       </form>
     </div>
-    
   </div>
 </template>
 
@@ -37,30 +42,21 @@
 <script>
 import { ref } from "vue";
 import getQuestionnaire from "../composables/getQuestionnaire";
-import { useMachine } from '@xstate/vue';
+import { useMachine } from "@xstate/vue";
 
 //Chakra didnt work, VueFormulate not supported either
-//CONFIGURATION OF THE FORM, Use States for each question
-//the initial state has to be set to the first question, in our example "scope"
-
+//CONFIGURATION OF THE FORM, Uses States for each question
+//the initial state has to be set to the first question
 
 export default {
   name: "Home",
   components: {},
   setup() {
-    console.log(1)
+    console.log(1);
     const { state, send } = useMachine(getQuestionnaire);
     //options doesnt need to be ref
     const option = ref("");
-    console.log(state);
-    console.log(3)
-    //this is not used anywhere
-
     let answersObj = { questions: [], answers: [] };
-
-    
-    console.log(3)
-    //console.log(state.one);
     return { state, send, option, answersObj };
   },
   data() {
@@ -68,11 +64,6 @@ export default {
       currentState: this.state.initial,
     };
   },
-  //   getURL(){
-  //       let x = "Vue";
-  //       return `../assets/${x}.png`
-  //   },
-
   computed: {
     currentDecision() {
       let currentQUEST = this.state.meta[`step.one`];
@@ -83,25 +74,21 @@ export default {
     },
   },
   methods: {
-    fetchQuestions() {
-      //moving the stateMachine to its own file did not work;
-
-      return null;
-    },
-    handleButtonClick: function () {
+    handleForward: function () {
       //if state radio button selected
       //get selected option send selected option to next
-      this.answersObj.questions.push(this.currentDecision.question);
-      this.answersObj.answers.push(this.picked);
-      console.log(this);
+      //this.answersObj.questions.push(this.currentDecision.question);
+      //this.answersObj.answers.push(this.picked);
+      //console.log(this);
       this.currentState = this.send(`${this.picked.answer}`);
+      
+      console.log(getQuestionnaire.context);
+      console.log(this.state);
     },
-    handleButtonBack: function () {
+    handleBack: function () {
       //prev button not holding state
       this.currentState = this.send("PREV");
       console.log(this.state.meta[`step.${this.state.value}`].question);
-
-      //breaks when you reach the end and try to come back
     },
     handleButtonJump: function () {
       //optional button to shortcircuit the tree
@@ -115,13 +102,27 @@ export default {
 </script>
 
 <style>
-form {
+.selector {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
-  justify-content: center;
+  margin: auto 0;
+
 }
 .Answers {
   text-align: center;
+}
+.submitQuestion {
+  margin: 1rem;
+  padding: 1rem;
+  
+}
+.option{
+  margin: 0.3rem;
+  padding: 0.3rem;
+}
+.submissionButton{
+  margin: 2rem;
+  padding: 1rem;
 }
 </style>
