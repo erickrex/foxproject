@@ -2,9 +2,8 @@ import { assign, createMachine } from "xstate";
 
 //this works by itself
 const addPicked = assign({
-  results: (ctx, event) => ctx.results.add(event.final)
+  results: (ctx, event) => ctx.results.add(event.userAnswer)
 });  
-
 
 //message could hold the time the user took to finish the questionnaire
 const getQuestionnaire = createMachine(
@@ -12,7 +11,7 @@ const getQuestionnaire = createMachine(
     id: "step",
     initial: "one",
     context: {
-      results: new Set(),
+      results: new Set,
       message: "",
     },
     states: {
