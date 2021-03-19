@@ -2,42 +2,51 @@
   <div>
     <h1>WordPress plugin selector</h1>
     <p>
-      Don't spend your money on a membership/LMS plugin that might be
-      incompatible with your current stack. Ask our experts first and find the
-      right plugin!
+      Don't spend your money on a membership/LMS plugin that might be incompatible with your current stack. Ask our expert AI selectir first and find the right plugin!
     </p>
     <div class="selector-container">
-      <h2>{{ currentDecision.question }}</h2>
+      <h2>{{ state.meta[`step.${state.value}`].question }}</h2>
       <form class="selector">
         <div>
           <div
             class="option"
-            v-for="optionsAvailable in currentDecision.optionsAvailable"
+            v-for="optionsAvailable in state.meta[`step.${state.value}`].optionsAvailable"
             :key="optionsAvailable"
           >
             <input
               type="radio"
               :value="optionsAvailable"
               v-model="picked"
-              :name="currentDecision.question"
+              :name="state.meta[`step.${state.value}`].question"
               validation="required"
             />
             {{ optionsAvailable.answer }}
           </div>
         </div>
         <div class="submitQuestion">
-          <input class="submissionButton" type="button" value="Back" @click.prevent="handleBack" />
-          <input class="submissionButton"
+          <input
+            class="submissionButton"
+            type="button"
+            value="Back"
+            @click.prevent="handleBack"
+          />
+          <input
+            class="submissionButton"
             type="button"
             value="Next"
             @click.prevent="handleForward"
           />
+          <input
+            class="submissionButton"
+            type="button"
+            value="Machine"
+            @click="goBack"
+          />
         </div>
-      </form>
+      </form>      
     </div>
   </div>
 </template>
-
 
 <script>
 import { ref } from "vue";
@@ -52,12 +61,16 @@ export default {
   name: "Home",
   components: {},
   setup() {
-    console.log(1);
+    const picked = ref('')
     const { state, send } = useMachine(getQuestionnaire);
-    //options doesnt need to be ref
     const option = ref("");
-    let answersObj = { questions: [], answers: [] };
-    return { state, send, option, answersObj };
+
+    
+    const goBack = () => {
+      //prev button not holding state
+      send("PREV");
+    }
+    return { state, send, option, picked, goBack };
   },
   data() {
     return {
@@ -69,7 +82,7 @@ export default {
       let currentQUEST = this.state.meta[`step.one`];
       if (this.currentState !== this.state.initial) {
         currentQUEST = this.state.meta[`step.${this.state.value}`];
-      }
+      } 
       return currentQUEST;
     },
   },
@@ -80,10 +93,12 @@ export default {
       //this.answersObj.questions.push(this.currentDecision.question);
       //this.answersObj.answers.push(this.picked);
       //console.log(this);
-      this.currentState = this.send(`${this.picked.answer}`);
-      
-      console.log(getQuestionnaire.context);
-      console.log(this.state);
+      this.currentState = this.send({
+        //name of the action in the state
+        type: `${this.picked.answer}`,
+        final: `${this.picked.answer}` 
+        });
+    console.log(getQuestionnaire.context.results);
     },
     handleBack: function () {
       //prev button not holding state
@@ -107,7 +122,6 @@ export default {
   flex-direction: column;
   flex-wrap: wrap;
   margin: auto 0;
-
 }
 .Answers {
   text-align: center;
@@ -115,13 +129,12 @@ export default {
 .submitQuestion {
   margin: 1rem;
   padding: 1rem;
-  
 }
-.option{
+.option {
   margin: 0.3rem;
   padding: 0.3rem;
 }
-.submissionButton{
+.submissionButton {
   margin: 2rem;
   padding: 1rem;
 }

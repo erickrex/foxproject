@@ -1,17 +1,13 @@
-import { assign, Machine } from "xstate";
-//I can add stuff to the Set via .add
+import { assign, createMachine } from "xstate";
+
+//this works by itself
+const addPicked = assign({
+  results: (ctx, event) => ctx.results.add(event.final)
+});  
 
 
-const addPicked = () => {
-  console.log("updatePicked")
-  //results: ctx => ctx.results.add(8)
-};
-
-const updatePicked = assign({
-  results: ctx => ctx.results.add(8)
-});
-
-const getQuestionnaire = Machine(
+//message could hold the time the user took to finish the questionnaire
+const getQuestionnaire = createMachine(
   {
     id: "step",
     initial: "one",
@@ -39,10 +35,10 @@ const getQuestionnaire = Machine(
         on: {
           "Hello by Elementor": { target: "two", actions: [addPicked] },
           Astra: { target: "two", actions: [addPicked] },
-          OceanWP: { target: "two", actions: [updatePicked] },
-          ThemeForest: { target: "two", actions: [updatePicked] },
-          GeneratePress: { target: "two", actions: [updatePicked] },
-          Genesis: { target: "two", actions: [updatePicked] },
+          OceanWP: { target: "two", actions: [addPicked] },
+          ThemeForest: { target: "two", actions: [addPicked] },
+          GeneratePress: { target: "two", actions: [addPicked] },
+          Genesis: { target: "two", actions: [addPicked] },
           Divi: { target: "two", actions: [addPicked] },
           X: { target: "two", actions: [addPicked] },
           Flatsome: { target: "two", actions: [addPicked] },
@@ -62,8 +58,8 @@ const getQuestionnaire = Machine(
         on: {
           Elementor: { target: "three", actions: [addPicked] },
           "Divi Builder": { target: "three", actions: [addPicked] },
-          WPBakery: { target: "three", actions: [updatePicked] },
-          None: { target: "three", actions: [updatePicked] },
+          WPBakery: { target: "three", actions: [addPicked] },
+          "No page builder": { target: "three", actions: [addPicked] },
           PREV: "one",
         },
       },
@@ -80,8 +76,8 @@ const getQuestionnaire = Machine(
         on: {
           RocketCache: { target: "fourA", actions: [addPicked] },
           W3Cache: { target: "fourA", actions: [addPicked] },
-          SuperCache: { target: "fourB", actions: [updatePicked] },
-          None: { target: "five", actions: [updatePicked] },
+          SuperCache: { target: "fourB", actions: [addPicked] },
+          "No cache plugin": { target: "five", actions: [addPicked] },
           PREV: "two",
         },
       },
@@ -109,7 +105,10 @@ const getQuestionnaire = Machine(
             { answer: "no", picture: "src" },
           ],
         },
-        on: { yes: "five", no: "five", PREV: "three" },
+        on: { 
+          yes: {target: "five", actions: [addPicked] }, 
+          no: {target: "five", actions: [addPicked] }, 
+          PREV: "three" },
       },
       five: {
         meta: {
@@ -120,7 +119,11 @@ const getQuestionnaire = Machine(
             { answer: "I do not know", picture: "src" },
           ],
         },
-        on: { yes: "finish", no: "finish", PREV: "three" },
+        on: { 
+          definetely: {target: "finish", actions: [addPicked] }, 
+          "probably not": {target: "finish", actions: [addPicked] }, 
+          "I do not know": {target: "finish", actions: [addPicked] }, 
+          PREV: "three" },
       },
       finish: {
         type: "final",
@@ -129,10 +132,16 @@ const getQuestionnaire = Machine(
   },
   {
     actions: {
-      addPicked,
-      updatePicked
+      addPicked
     },
   }
 );
+
+// const service = interpret(getQuestionnaire).onTransition(state => {
+//   console.log(state.context);
+//   console.log(getQuestionnaire.context);
+// });
+
+// service.start()
 
 export default getQuestionnaire;
