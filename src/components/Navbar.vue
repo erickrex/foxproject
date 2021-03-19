@@ -18,13 +18,14 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
+    max-width: 1000px;
+    height: 90px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 5px;
   }
   header h1 {
     color: #dfdfdf;
-    font-size: 48px;
+    font-size: 2rem;
   }
   header a {
     color: #bbb;
