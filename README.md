@@ -1,6 +1,6 @@
 # foxproject
 
-A multi-step questionnaire application to create a sequence of questions and answeres based on a JSON object/state machine.  
+A multi-step questionnaire application to create a sequence of questions and answers based on a JSON object/state machine.  
 
 #### Note
 This application is purely for practice purposes. Most of its setup and configuration come from the vue-cli create vue app, it's not ready for production and may contain bugs. 

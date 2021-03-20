@@ -2,8 +2,8 @@ import { assign, createMachine } from "xstate";
 
 //this works by itself
 const addPicked = assign({
-  results: (ctx, event) => ctx.results.add(event.userAnswer)
-});  
+  results: (ctx, event) => ctx.results.add(event.userAnswer),
+});
 
 //message could hold the time the user took to finish the questionnaire
 const getQuestionnaire = createMachine(
@@ -11,7 +11,7 @@ const getQuestionnaire = createMachine(
     id: "step",
     initial: "one",
     context: {
-      results: new Set,
+      results: new Set(),
       message: "",
     },
     states: {
@@ -21,12 +21,11 @@ const getQuestionnaire = createMachine(
           optionsAvailable: [
             { answer: "Hello by Elementor", picture: "src" },
             { answer: "Astra", picture: "src" },
-            { answer: "OceanWP", picture: "src" },
+
             { answer: "ThemeForest", picture: "src" },
             { answer: "GeneratePress", picture: "src" },
             { answer: "Genesis", picture: "src" },
             { answer: "Divi", picture: "src" },
-            { answer: "X", picture: "src" },
             { answer: "Flatsome", picture: "src" },
             { answer: "Other", picture: "src" },
           ],
@@ -34,12 +33,10 @@ const getQuestionnaire = createMachine(
         on: {
           "Hello by Elementor": { target: "two", actions: [addPicked] },
           Astra: { target: "two", actions: [addPicked] },
-          OceanWP: { target: "two", actions: [addPicked] },
           ThemeForest: { target: "two", actions: [addPicked] },
           GeneratePress: { target: "two", actions: [addPicked] },
           Genesis: { target: "two", actions: [addPicked] },
           Divi: { target: "two", actions: [addPicked] },
-          X: { target: "two", actions: [addPicked] },
           Flatsome: { target: "two", actions: [addPicked] },
           Other: { target: "two", actions: [addPicked] },
         },
@@ -104,10 +101,11 @@ const getQuestionnaire = createMachine(
             { answer: "no", picture: "src" },
           ],
         },
-        on: { 
-          yes: {target: "five", actions: [addPicked] }, 
-          no: {target: "five", actions: [addPicked] }, 
-          PREV: "three" },
+        on: {
+          yes: { target: "five", actions: [addPicked] },
+          no: { target: "five", actions: [addPicked] },
+          PREV: "three",
+        },
       },
       five: {
         meta: {
@@ -118,11 +116,12 @@ const getQuestionnaire = createMachine(
             { answer: "I do not know", picture: "src" },
           ],
         },
-        on: { 
-          definetely: {target: "finish", actions: [addPicked] }, 
-          "probably not": {target: "finish", actions: [addPicked] }, 
-          "I do not know": {target: "finish", actions: [addPicked] }, 
-          PREV: "three" },
+        on: {
+          definetely: { target: "finish", actions: [addPicked] },
+          "probably not": { target: "finish", actions: [addPicked] },
+          "I do not know": { target: "finish", actions: [addPicked] },
+          PREV: "three",
+        },
       },
       finish: {
         type: "final",
@@ -131,7 +130,7 @@ const getQuestionnaire = createMachine(
   },
   {
     actions: {
-      addPicked
+      addPicked,
     },
   }
 );

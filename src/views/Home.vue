@@ -8,28 +8,26 @@
     </p>
     <div class="selector-container">
       <h2>{{ state.meta[`step.${state.value}`].question }}</h2>
-      
-      <form class="selector">
-        <div>
-          <div
-            class="option"
-            v-for="optionsAvailable in state.meta[`step.${state.value}`]
-              .optionsAvailable"
-            :key="optionsAvailable"
-          >
-            <input
-              type="radio"
-              :value="optionsAvailable"
-              v-model="picked"
-              :name="state.meta[`step.${state.value}`].question"
-              validation="required"
-            />
-            {{ optionsAvailable.answer }}
-          </div>
+
+      <form className="w-3/12 m-auto bg-purple-100 mt-4 shadow-2xl flex justify-center flex-col items-center">
+        <div
+          class="option"
+          v-for="optionsAvailable in state.meta[`step.${state.value}`]
+            .optionsAvailable"
+          :key="optionsAvailable"
+        >
+          <input
+            type="radio"
+            :value="optionsAvailable"
+            v-model="picked"
+            :name="state.meta[`step.${state.value}`].question"
+            validation="required"
+          />
+          {{ optionsAvailable.answer }}
         </div>
+
         <div class="submitQuestion">
           <input
-            
             class="submissionButton"
             type="button"
             value="Back"
