@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import getQuestionnaire from "../composables/getQuestionnaire";
 import { useMachine } from "@xstate/vue";
 
@@ -61,6 +61,10 @@ export default {
     const picked = ref("");
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
+
+    watch(picked => {
+      console.log(picked)
+    })
 
     const goForward = () => {
       send({
