@@ -1,6 +1,8 @@
-import { createApp } from 'vue'
+import { createApp, provide, h } from 'vue'
 import router from './router'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { DefaultApolloClient } from '@vue/apollo-composable'
+
 import App from './App.vue'
 import './assets/tailwind.css'
 
@@ -18,4 +20,15 @@ defaultClient.query({
     query
 }).then(res => console.log(res))
 
-createApp(App).use(router).mount('#app')
+createApp(
+    {
+      setup () {
+        provide(DefaultApolloClient, defaultClient)
+      },
+      render() {
+        return h(App)
+      }
+    }
+  ).use(router).mount('#app')
+
+//createApp(App).use(router).mount('#app')

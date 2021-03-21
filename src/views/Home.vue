@@ -3,7 +3,7 @@
     <h1>WordPress plugin selector</h1>
     <p>
       Don't spend your money on a membership/LMS plugin that might be
-      incompatible with your current stack. Ask our expert AI selectir first and
+      incompatible with your current stack. Ask our expert AI selector first and
       find the right plugin!
     </p>
     <div class="selector-container">
@@ -39,6 +39,13 @@
             value="Next"
             @click.prevent="goForward"
           />
+          <input
+            class="x"
+            type="button"
+            value="Prisma"
+            @click.prevent="answersToDB"
+          />
+          
         </div>
       </form>
     </div>
@@ -46,7 +53,9 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref } from "vue";
+import { useMutation } from '@vue/apollo-composable'
+import insertAnswersMutation from '../assets/insertAnswers.mutation.gql'
 import getQuestionnaire from "../composables/getQuestionnaire";
 import { useMachine } from "@xstate/vue";
 
@@ -62,9 +71,13 @@ export default {
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
 
-    watch(picked => {
-      console.log(picked)
-    })
+    const { mutate: insertAnswers } = useMutation(insertAnswersMutation)
+    const answersFromUser = getQuestionnaire.context.results
+
+    function answersToDB(){
+      insertAnswers()
+      console.log(JSON.stringify([...getQuestionnaire.context.results]))
+    }
 
     const goForward = () => {
       send({
@@ -74,13 +87,13 @@ export default {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
-      console.log(getQuestionnaire.context.results);
+      
     };
     const goBack = () => {
       //prev button not holding state
       send("PREV");
     };
-    return { state, send, option, picked, goBack, goForward };
+    return { state, send, option, picked, goBack, goForward, answersToDB, answersFromUser };
   },
 };
 </script>

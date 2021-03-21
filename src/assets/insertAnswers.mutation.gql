@@ -1,0 +1,5 @@
+mutation insertAnswers {
+  signupUser(data: { name: "Rocku", email: "rocku@prisma.io" }) {
+    id
+  }
+}

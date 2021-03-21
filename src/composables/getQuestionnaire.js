@@ -73,7 +73,7 @@ const getQuestionnaire = createMachine(
           RocketCache: { target: "fourA", actions: [addPicked] },
           W3Cache: { target: "fourA", actions: [addPicked] },
           SuperCache: { target: "fourB", actions: [addPicked] },
-          "No cache plugin": { target: "five", actions: [addPicked] },
+          "No cache plugin": { target: "fourB", actions: [addPicked] },
           PREV: "two",
         },
       },
