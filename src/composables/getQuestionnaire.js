@@ -19,23 +19,18 @@ const getQuestionnaire = createMachine(
         meta: {
           question: "Which theme are you currently using?",
           optionsAvailable: [
-            { answer: "Hello by Elementor", picture: "src" },
             { answer: "Astra", picture: "src" },
-
-            { answer: "ThemeForest", picture: "src" },
+            { answer: "ThemeForest theme", picture: "src" },
             { answer: "GeneratePress", picture: "src" },
-            { answer: "Genesis", picture: "src" },
             { answer: "Divi", picture: "src" },
             { answer: "Flatsome", picture: "src" },
             { answer: "Other", picture: "src" },
           ],
         },
         on: {
-          "Hello by Elementor": { target: "two", actions: [addPicked] },
           Astra: { target: "two", actions: [addPicked] },
-          ThemeForest: { target: "two", actions: [addPicked] },
+          "ThemeForest theme": { target: "two", actions: [addPicked] },
           GeneratePress: { target: "two", actions: [addPicked] },
-          Genesis: { target: "two", actions: [addPicked] },
           Divi: { target: "two", actions: [addPicked] },
           Flatsome: { target: "two", actions: [addPicked] },
           Other: { target: "two", actions: [addPicked] },
@@ -117,13 +112,55 @@ const getQuestionnaire = createMachine(
           ],
         },
         on: {
-          definetely: { target: "finish", actions: [addPicked] },
-          "probably not": { target: "finish", actions: [addPicked] },
-          "I do not know": { target: "finish", actions: [addPicked] },
+          definetely: { target: "sixA", actions: [addPicked] },
+          "probably not": { target: "sixB", actions: [addPicked] },
+          "I do not know": { target: "sixC", actions: [addPicked] },
           PREV: "three",
         },
       },
+      sixA: {
+        meta: {
+          question: "We recommend you the following product",
+          optionsAvailable: [
+            { answer: "Learn Dash", picture: "src" },
+          ],
+        },
+        on: {
+          "Learn Dash": { target: "finish", actions: [addPicked] },
+           PREV: "five",
+        },
+      },
+      sixB: {
+        meta: {
+          question: "We recommend you the following product",
+          optionsAvailable: [
+            { answer: "Lifter LMS", picture: "src" },
+          ],
+        },
+        on: {
+          "Lifter LMS": { target: "finish", actions: [addPicked] },
+           PREV: "five",
+        },
+      },
+      sixC: {
+        meta: {
+          question: "We recommend you the following product",
+          optionsAvailable: [
+            { answer: "TutorLMS", picture: "src" },
+          ],
+        },
+        on: {
+          "TutorLMS": { target: "finish", actions: [addPicked] },
+           PREV: "five",
+        },
+      },
       finish: {
+        meta: {
+          question: "Thank you for trusting our selector",
+          optionsAvailable: [
+            { answer: "Finished", picture: "src" },
+          ],
+        },
         type: "final",
       },
     },
@@ -135,11 +172,5 @@ const getQuestionnaire = createMachine(
   }
 );
 
-// const service = interpret(getQuestionnaire).onTransition(state => {
-//   console.log(state.context);
-//   console.log(getQuestionnaire.context);
-// });
-
-// service.start()
 
 export default getQuestionnaire;

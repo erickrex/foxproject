@@ -39,23 +39,16 @@
             value="Next"
             @click.prevent="goForward"
           />
-          <input
-            class="x"
-            type="button"
-            value="Prisma"
-            @click.prevent="answersToDB()"
-          />
           
         </div>
       </form>
       
     </div>
-    <div v-if="questionsAnswered==true" ><h1>YASSS</h1></div>
   </div>
 </template>
 
 <script>
-import { ref, computed, reactive } from "vue";
+import { ref } from "vue";
 import { useMutation } from '@vue/apollo-composable'
 import createAnswerMutation from '../assets/createAnswer.mutation.gql'
 import getQuestionnaire from "../composables/getQuestionnaire";
@@ -73,16 +66,8 @@ export default {
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
     console.log(Date.now())
-    
-    const end = reactive({questionsAnswered : computed(() => state.value.value == 'two' ? true: false)});
-    
-
-    // function finishedQuestionnaire() {
-    //     return state.value.value == 'two' ? true: false
-    // }
-    //const email = 'yaja@gmail.com'
+        
     const {mutate: insertAnswer }  = useMutation(createAnswerMutation)
-
     const answersFromUser = getQuestionnaire.context.results
     
     
@@ -104,10 +89,13 @@ export default {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
+      if(state.value.value == "finish"){
+        answersToDB()
+      }
       console.log(state.value.value)
       console.log(getQuestionnaire.context.results)
 
-      console.log(JSON.stringify([...getQuestionnaire.context.results]))
+      
     };
     const goBack = () => {
       //prev button not holding state
@@ -115,12 +103,18 @@ export default {
     };
     return { state, send, option, picked, goBack, goForward, 
     answersToDB, answersFromUser,
-     insertAnswer, end };
+     insertAnswer };
   },
 };
 </script>
 
 <style>
+h1 {
+  size: 2rem;
+}
+h2{
+  size: 1 rem
+}
 .selector {
   display: flex;
   flex-direction: column;
