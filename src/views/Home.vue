@@ -9,7 +9,7 @@
     <div class="selector-container">
       <h2>{{ state.meta[`step.${state.value}`].question }}</h2>
 
-      <form className="w-3/12 m-auto bg-purple-100 mt-4 shadow-2xl flex justify-center flex-col items-center">
+      <form className="selector">
         <div
           class="option"
           v-for="optionsAvailable in state.meta[`step.${state.value}`]
@@ -50,7 +50,7 @@
       </form>
       
     </div>
-    <div v-if="end.value==true" ><h1>YASSS</h1></div>
+    <div v-if="questionsAnswered==true" ><h1>YASSS</h1></div>
   </div>
 </template>
 
@@ -72,9 +72,9 @@ export default {
     const picked = ref("");
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
+    console.log(Date.now())
     
-    
-    const end = reactive((computed(() => state.value.value == 'two' ? true: false)));
+    const end = reactive({questionsAnswered : computed(() => state.value.value == 'two' ? true: false)});
     
 
     // function finishedQuestionnaire() {
@@ -88,21 +88,26 @@ export default {
     
 
     function answersToDB() {
-      const userAnswer = getQuestionnaire.context.results.value.toString();
-      insertAnswer({  id: 3, answer: userAnswer, entryAt: "2025-11-22T13:57:31.123Z"});
-      console.log(getQuestionnaire.context.results.value)
+      const userAnswer = JSON.stringify([...getQuestionnaire.context.results])
+      const userAnswerDate = new Date()
+
+      insertAnswer({  id: 3, answer: userAnswer, entryAt: userAnswerDate});
+
+      console.log(typeof(JSON.stringify([...getQuestionnaire.context.results])))
     }
 
     const goForward = () => {
       send({
         //name of the action in the state
         type: `${picked.value.answer}`,
-        userAnswer: {
+        partialAnswer: {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
       console.log(state.value.value)
-      console.log(end.value)
+      console.log(getQuestionnaire.context.results)
+
+      console.log(JSON.stringify([...getQuestionnaire.context.results]))
     };
     const goBack = () => {
       //prev button not holding state
