@@ -1,0 +1,7 @@
+mutation insertAnswer($id: Int!, $entryAt: DateTime!, $answer: String ){
+  insertAnswer (data: {  id: $id, entryAt: $entryAt, answer: $answer}) {
+    id
+    entryAt
+    answer
+  }
+}

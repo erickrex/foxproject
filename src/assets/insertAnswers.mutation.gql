@@ -1,5 +1,5 @@
-mutation insertAnswers {
-  signupUser(data: { name: "Rocku", email: "rocku@prisma.io" }) {
+mutation signupUser($name: String, $email: String! ){
+  signupUser (data: { name: $name, email: $email }) {
     id
   }
 }

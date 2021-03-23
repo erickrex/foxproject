@@ -43,19 +43,21 @@
             class="x"
             type="button"
             value="Prisma"
-            @click.prevent="answersToDB"
+            @click.prevent="answersToDB()"
           />
           
         </div>
       </form>
+      
     </div>
+    <div v-if="end.value==true" ><h1>YASSS</h1></div>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
 import { useMutation } from '@vue/apollo-composable'
-import insertAnswersMutation from '../assets/insertAnswers.mutation.gql'
+import createAnswerMutation from '../assets/createAnswer.mutation.gql'
 import getQuestionnaire from "../composables/getQuestionnaire";
 import { useMachine } from "@xstate/vue";
 
@@ -70,13 +72,25 @@ export default {
     const picked = ref("");
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
+    
+    
+    const end = reactive((computed(() => state.value.value == 'two' ? true: false)));
+    
 
-    const { mutate: insertAnswers } = useMutation(insertAnswersMutation)
+    // function finishedQuestionnaire() {
+    //     return state.value.value == 'two' ? true: false
+    // }
+    //const email = 'yaja@gmail.com'
+    const {mutate: insertAnswer }  = useMutation(createAnswerMutation)
+
     const answersFromUser = getQuestionnaire.context.results
+    
+    
 
-    function answersToDB(){
-      insertAnswers()
-      console.log(JSON.stringify([...getQuestionnaire.context.results]))
+    function answersToDB() {
+      const userAnswer = getQuestionnaire.context.results.value.toString();
+      insertAnswer({  id: 3, answer: userAnswer, entryAt: "2025-11-22T13:57:31.123Z"});
+      console.log(getQuestionnaire.context.results.value)
     }
 
     const goForward = () => {
@@ -87,13 +101,16 @@ export default {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
-      
+      console.log(state.value.value)
+      console.log(end.value)
     };
     const goBack = () => {
       //prev button not holding state
       send("PREV");
     };
-    return { state, send, option, picked, goBack, goForward, answersToDB, answersFromUser };
+    return { state, send, option, picked, goBack, goForward, 
+    answersToDB, answersFromUser,
+     insertAnswer, end };
   },
 };
 </script>
