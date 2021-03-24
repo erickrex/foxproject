@@ -2,9 +2,6 @@
 
 A multi-step questionnaire application to create a sequence of questions and answers based on a JSON object/state machine and persist the result to a DB through a GraphQL API.  
 
-#### Note
-This application is purely for practice purposes. Most of its setup and configuration come from the vue-cli create vue app command, it's not ready for production and may contain bugs. 
-
 ## Features
 The questionnaire resembles a decision tree. The following question you receive depends directly of your previous answer. Some may converge into the same question later. The final result is a unique branch in the final step that recommends you a product according to your answers and persists this to a DB via Apollo GraphQL.
 
