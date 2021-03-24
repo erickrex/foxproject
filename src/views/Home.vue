@@ -39,24 +39,19 @@
             value="Next"
             @click.prevent="goForward"
           />
-          
         </div>
       </form>
-      
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
-import { useMutation } from '@vue/apollo-composable'
-import createAnswerMutation from '../assets/createAnswer.mutation.gql'
+import { useMutation } from "@vue/apollo-composable";
+import createAnswerMutation from "../assets/createAnswer.mutation.gql";
 import getQuestionnaire from "../composables/getQuestionnaire";
 import { useMachine } from "@xstate/vue";
 
-//Chakra didnt work, VueFormulate not supported either
-//CONFIGURATION OF THE FORM, Uses States for each question
-//the initial state has to be set to the first question
 
 export default {
   name: "Home",
@@ -65,45 +60,48 @@ export default {
     const picked = ref("");
     const { state, send } = useMachine(getQuestionnaire);
     const option = ref("");
-    console.log(Date.now())
-        
-    const {mutate: insertAnswer }  = useMutation(createAnswerMutation)
-    const answersFromUser = getQuestionnaire.context.results
-    
-    
+    console.log(Date.now());
+
+    const { mutate: insertAnswer } = useMutation(createAnswerMutation);
+    const answersFromUser = getQuestionnaire.context.results;
 
     function answersToDB() {
-      const userAnswer = JSON.stringify([...getQuestionnaire.context.results])
-      const userAnswerDate = new Date()
+      const userAnswer = JSON.stringify([...getQuestionnaire.context.results]);
+      const userAnswerDate = new Date();
 
-      insertAnswer({  id: 3, answer: userAnswer, entryAt: userAnswerDate});
+      insertAnswer({ id: 3, answer: userAnswer, entryAt: userAnswerDate });
 
-      console.log(typeof(JSON.stringify([...getQuestionnaire.context.results])))
+      console.log(typeof JSON.stringify([...getQuestionnaire.context.results]));
     }
 
     const goForward = () => {
       send({
-        //name of the action in the state
         type: `${picked.value.answer}`,
         partialAnswer: {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
-      if(state.value.value == "finish"){
-        answersToDB()
+      if (state.value.value == "finish") {
+        answersToDB();
       }
-      console.log(state.value.value)
-      console.log(getQuestionnaire.context.results)
-
-      
+      console.log(state.value.value);
+      console.log(getQuestionnaire.context.results);
     };
     const goBack = () => {
       //prev button not holding state
       send("PREV");
     };
-    return { state, send, option, picked, goBack, goForward, 
-    answersToDB, answersFromUser,
-     insertAnswer };
+    return {
+      state,
+      send,
+      option,
+      picked,
+      goBack,
+      goForward,
+      answersToDB,
+      answersFromUser,
+      insertAnswer,
+    };
   },
 };
 </script>
@@ -112,8 +110,8 @@ export default {
 h1 {
   size: 2rem;
 }
-h2{
-  size: 1 rem
+h2 {
+  size: 1 rem;
 }
 .selector {
   display: flex;

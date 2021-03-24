@@ -1,5 +1,0 @@
-mutation insertAnswers($name: NAME!, $email: EMAIL!){
-  signupUser(data: { name: $name, email: $email }) {
-    id
-  }
-}

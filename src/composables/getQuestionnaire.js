@@ -1,17 +1,16 @@
 import { assign, createMachine } from "xstate";
 
-//this works by itself
 const addPicked = assign({
-  results: (ctx, event) => ctx.results.add(event.partialAnswer)
+  results: (ctx, event) => ctx.results.add(event.partialAnswer),
 });
 
-//message could hold the time the user took to finish the questionnaire
+//message could hold some additional info about the user
 const getQuestionnaire = createMachine(
   {
     id: "step",
     initial: "one",
     context: {
-      results : new Set,
+      results: new Set(),
       message: "",
     },
     states: {
@@ -121,45 +120,37 @@ const getQuestionnaire = createMachine(
       sixA: {
         meta: {
           question: "We recommend you the following product",
-          optionsAvailable: [
-            { answer: "Learn Dash", picture: "src" },
-          ],
+          optionsAvailable: [{ answer: "Learn Dash", picture: "src" }],
         },
         on: {
           "Learn Dash": { target: "finish", actions: [addPicked] },
-           PREV: "five",
+          PREV: "five",
         },
       },
       sixB: {
         meta: {
           question: "We recommend you the following product",
-          optionsAvailable: [
-            { answer: "Lifter LMS", picture: "src" },
-          ],
+          optionsAvailable: [{ answer: "Lifter LMS", picture: "src" }],
         },
         on: {
           "Lifter LMS": { target: "finish", actions: [addPicked] },
-           PREV: "five",
+          PREV: "five",
         },
       },
       sixC: {
         meta: {
           question: "We recommend you the following product",
-          optionsAvailable: [
-            { answer: "TutorLMS", picture: "src" },
-          ],
+          optionsAvailable: [{ answer: "TutorLMS", picture: "src" }],
         },
         on: {
-          "TutorLMS": { target: "finish", actions: [addPicked] },
-           PREV: "five",
+          TutorLMS: { target: "finish", actions: [addPicked] },
+          PREV: "five",
         },
       },
       finish: {
         meta: {
           question: "Thank you for trusting our selector",
-          optionsAvailable: [
-            { answer: "Finished", picture: "src" },
-          ],
+          optionsAvailable: [{ answer: "Finished", picture: "src" }],
         },
         type: "final",
       },
@@ -171,6 +162,5 @@ const getQuestionnaire = createMachine(
     },
   }
 );
-
 
 export default getQuestionnaire;

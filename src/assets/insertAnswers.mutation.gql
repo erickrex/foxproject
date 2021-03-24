@@ -1,5 +1,0 @@
-mutation signupUser($name: String, $email: String! ){
-  signupUser (data: { name: $name, email: $email }) {
-    id
-  }
-}
