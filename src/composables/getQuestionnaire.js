@@ -4,6 +4,10 @@ const addPicked = assign({
   results: (ctx, event) => ctx.results.add(event.partialAnswer),
 });
 
+// const setProductRoute = assign({
+//   results: (ctx) => ctx.productRoute.set(),
+// });
+
 //message could hold some additional info about the user
 const getQuestionnaire = createMachine(
   {
@@ -11,6 +15,7 @@ const getQuestionnaire = createMachine(
     initial: "one",
     context: {
       results: new Set(),
+      productRoute: "",
       message: "",
     },
     states: {
@@ -121,6 +126,7 @@ const getQuestionnaire = createMachine(
         meta: {
           question: "We recommend you the following product",
           optionsAvailable: [{ answer: "Learn Dash", picture: "src" }],
+          route: "learndash"
         },
         on: {
           "Learn Dash": { target: "finish", actions: [addPicked] },
@@ -131,6 +137,7 @@ const getQuestionnaire = createMachine(
         meta: {
           question: "We recommend you the following product",
           optionsAvailable: [{ answer: "Lifter LMS", picture: "src" }],
+          route: "lifterlms"
         },
         on: {
           "Lifter LMS": { target: "finish", actions: [addPicked] },
@@ -141,11 +148,9 @@ const getQuestionnaire = createMachine(
         meta: {
           question: "We recommend you the following product",
           optionsAvailable: [{ answer: "TutorLMS", picture: "src" }],
+          route: "tutorlms"
         },
-        on: {
-          TutorLMS: { target: "finish", actions: [addPicked] },
-          PREV: "five",
-        },
+        type: "final",
       },
       finish: {
         meta: {

@@ -12,6 +12,7 @@
     "@prisma/client": "^2.19.0",
     "@tailwindcss/postcss7-compat": "^2.0.2",
     "@vue/apollo-composable": "^4.0.0-alpha.12",
+    "@xstate/inspect": "^0.4.1",
     "@xstate/vue": "^0.4.0",
     "autoprefixer": "^9",
     "core-js": "^3.6.5",

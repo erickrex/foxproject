@@ -25,7 +25,9 @@
           />
           {{ optionsAvailable.answer }}
         </div>
-
+        <router-link v-if="sixC" :to="`/${state.value}`">
+        {{ state.value }}
+      </router-link>
         <div class="submitQuestion">
           <input
             class="submissionButton"
@@ -34,6 +36,7 @@
             @click.prevent="goBack"
           />
           <input
+            v-if="!sixC"
             class="submissionButton"
             type="button"
             value="Next"
@@ -46,32 +49,39 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, watchEffect, computed } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import createAnswerMutation from "../assets/createAnswer.mutation.gql";
 import getQuestionnaire from "../composables/getQuestionnaire";
 import { useMachine } from "@xstate/vue";
-
-
+  
+//machine inspector
 export default {
+  
   name: "Home",
   components: {},
+  
+
   setup() {
     const picked = ref("");
-    const { state, send } = useMachine(getQuestionnaire);
+    const { state, send } = useMachine(getQuestionnaire, {devtools: true});
     const option = ref("");
-    console.log(Date.now());
-
     const { mutate: insertAnswer } = useMutation(createAnswerMutation);
     const answersFromUser = getQuestionnaire.context.results;
+    const sixC = computed(() => {
+      return state.value.value == "sixC" ? true : false
+    })
+    watchEffect(() => console.log(sixC.value))
+    
 
+    
     function answersToDB() {
       const userAnswer = JSON.stringify([...getQuestionnaire.context.results]);
       const userAnswerDate = new Date();
 
-      insertAnswer({ id: 3, answer: userAnswer, entryAt: userAnswerDate });
+      insertAnswer({ id: 35, answer: userAnswer, entryAt: userAnswerDate });
 
-      console.log(typeof JSON.stringify([...getQuestionnaire.context.results]));
+      console.log(JSON.stringify([...getQuestionnaire.context.results]));
     }
 
     const goForward = () => {
@@ -81,12 +91,17 @@ export default {
           [`${state.value.value}`]: `${picked.value.answer}`,
         },
       });
-      if (state.value.value == "finish") {
+      if (state.value.matches("two")) {
         answersToDB();
       }
+      console.log("mira el questio")
+      console.log(state.value.meta[`step.${state.value.value}`].question);
       console.log(state.value.value);
-      console.log(getQuestionnaire.context.results);
+      console.log(state.value.type + 'type')
+      console.log(state.value.done + "done")
+      
     };
+
     const goBack = () => {
       //prev button not holding state
       send("PREV");
@@ -100,19 +115,15 @@ export default {
       goForward,
       answersToDB,
       answersFromUser,
-      insertAnswer,
+      insertAnswer, 
+      sixC
     };
   },
 };
 </script>
 
 <style>
-h1 {
-  size: 2rem;
-}
-h2 {
-  size: 1 rem;
-}
+
 .selector {
   display: flex;
   flex-direction: column;

@@ -12,7 +12,11 @@ const defaultClient = new ApolloClient({
   })
 
 const query = gql`query {
-    allUsers { email }
+    allAnswers { 
+      id
+      entryAt
+      answer
+     }
   }`
 
 
