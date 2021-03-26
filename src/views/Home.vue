@@ -24,9 +24,7 @@
           />
           {{ optionsAvailable.answer }}
         </div>
-        <router-link :to="`/${state.value}`">
-          {{ state.value }}
-        </router-link>
+        
         <div class="submitQuestion">
           <input
             class="submissionButton"
@@ -46,10 +44,9 @@
             class="submissionButton"
             type="button"
             value="See recommendation"
-            @click.prevent="goForward"
+            @click.prevent=""
           />
         </div>
-        <h2 v-if="state.matches('two')">AQUI</h2>
       </form>
     </div>
   </div>
@@ -58,8 +55,7 @@
 <script>
 // import SingleQuestion from '../components/SingleQuestion.vue'
 // import Spinner from '../components/Spinner.vue'
-
-import { ref, watchEffect, computed } from "vue";
+import { ref} from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import createAnswerMutation from "../assets/createAnswer.mutation.gql";
 import Questionnaire from "../composables/Questionnaire";
@@ -75,11 +71,7 @@ export default {
     const option = ref("");
     const { mutate: insertAnswer } = useMutation(createAnswerMutation);
     const answersFromUser = Questionnaire.context.results;
-    const sixC = computed(() => {
-      return state.value.value == "sixC" ? true : false;
-    });
-    watchEffect(() => console.log(sixC.value));
-
+    
     function answersToDB() {
       const userAnswer = JSON.stringify([...Questionnaire.context.results]);
       const userAnswerDate = new Date();
@@ -114,7 +106,6 @@ export default {
       answersToDB,
       answersFromUser,
       insertAnswer,
-      sixC,
     };
   },
 };

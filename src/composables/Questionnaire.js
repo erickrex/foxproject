@@ -4,10 +4,6 @@ const addPicked = assign({
   results: (ctx, event) => ctx.results.add(event.partialAnswer),
 });
 
-// const setProductRoute = assign({
-//   results: (ctx) => ctx.productRoute.set(),
-// });
-
 //message could hold some additional info about the user
 const Questionnaire = createMachine(
   {
