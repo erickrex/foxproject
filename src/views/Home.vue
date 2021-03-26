@@ -24,7 +24,7 @@
           />
           {{ optionsAvailable.answer }}
         </div>
-        <router-link v-if="sixC" :to="`/${state.value}`">
+        <router-link :to="`/${state.value}`">
           {{ state.value }}
         </router-link>
         <div class="submitQuestion">
@@ -49,17 +49,20 @@
             @click.prevent="goForward"
           />
         </div>
-        <h2 v-if="(state.matches('two'))">AQUI </h2>
+        <h2 v-if="state.matches('two')">AQUI</h2>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+// import SingleQuestion from '../components/SingleQuestion.vue'
+// import Spinner from '../components/Spinner.vue'
+
 import { ref, watchEffect, computed } from "vue";
 import { useMutation } from "@vue/apollo-composable";
 import createAnswerMutation from "../assets/createAnswer.mutation.gql";
-import getQuestionnaire from "../composables/getQuestionnaire";
+import Questionnaire from "../composables/Questionnaire";
 import { useMachine } from "@xstate/vue";
 
 export default {
@@ -68,20 +71,20 @@ export default {
 
   setup() {
     const picked = ref("");
-    const { state, send } = useMachine(getQuestionnaire);
+    const { state, send } = useMachine(Questionnaire);
     const option = ref("");
     const { mutate: insertAnswer } = useMutation(createAnswerMutation);
-    const answersFromUser = getQuestionnaire.context.results;
+    const answersFromUser = Questionnaire.context.results;
     const sixC = computed(() => {
       return state.value.value == "sixC" ? true : false;
     });
     watchEffect(() => console.log(sixC.value));
 
     function answersToDB() {
-      const userAnswer = JSON.stringify([...getQuestionnaire.context.results]);
+      const userAnswer = JSON.stringify([...Questionnaire.context.results]);
       const userAnswerDate = new Date();
       insertAnswer({ id: 0, answer: userAnswer, entryAt: userAnswerDate });
-      //console.log(JSON.stringify([...getQuestionnaire.context.results]));
+      //console.log(JSON.stringify([...Questionnaire.context.results]));
     }
 
     const goForward = () => {

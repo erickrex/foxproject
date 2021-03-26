@@ -9,7 +9,7 @@ const addPicked = assign({
 // });
 
 //message could hold some additional info about the user
-const getQuestionnaire = createMachine(
+const Questionnaire = createMachine(
   {
     id: "step",
     initial: "one",
@@ -164,4 +164,4 @@ const getQuestionnaire = createMachine(
   }
 );
 
-export default getQuestionnaire;
+export default Questionnaire;
