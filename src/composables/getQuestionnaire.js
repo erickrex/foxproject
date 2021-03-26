@@ -129,9 +129,9 @@ const getQuestionnaire = createMachine(
           route: "learndash"
         },
         on: {
-          "Learn Dash": { target: "finish", actions: [addPicked] },
-          PREV: "five",
+          entry: { actions: [addPicked] },
         },
+        type: "final",
       },
       sixB: {
         meta: {
@@ -140,9 +140,9 @@ const getQuestionnaire = createMachine(
           route: "lifterlms"
         },
         on: {
-          "Lifter LMS": { target: "finish", actions: [addPicked] },
-          PREV: "five",
+          entry: { actions: [addPicked] },
         },
+        type: "final", 
       },
       sixC: {
         meta: {
@@ -150,12 +150,8 @@ const getQuestionnaire = createMachine(
           optionsAvailable: [{ answer: "TutorLMS", picture: "src" }],
           route: "tutorlms"
         },
-        type: "final",
-      },
-      finish: {
-        meta: {
-          question: "Thank you for trusting our selector",
-          optionsAvailable: [{ answer: "Finished", picture: "src" }],
+        on: {
+          entry: { actions: [addPicked] },
         },
         type: "final",
       },
