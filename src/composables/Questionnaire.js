@@ -1,10 +1,9 @@
 import { assign, createMachine } from "xstate";
 
 const addPicked = assign({
-  results: (ctx, event) => ctx.results.add(event.partialAnswer),
+  results: (ctx, event) => ctx.results.add(event.partialAnswer)
 });
 
-//message could hold some additional info about the user
 const Questionnaire = createMachine(
   {
     id: "step",

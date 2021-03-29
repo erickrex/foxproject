@@ -13,27 +13,30 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1000px;
-    height: 90px;
+    height: 80px;
     margin: 0 auto;
-    padding: 5px;
   }
-  header h1 {
+  h1 {
+    color: #dfdfdf;
+    font-size: 2rem;
+    text-decoration: none;
+
+  }
+  h1:hover {
+    color: black;
+  }
+  nav {
+    text-decoration: none;
     color: #dfdfdf;
     font-size: 2rem;
   }
-  header a {
-    color: #bbb;
-    text-decoration: none;
-    margin-left: 20px;
-  }
-  header a.router-link-active {
-    color: #444;
-    font-weight: bold;
+  nav:hover{
+    color: black;
   }
 </style>
